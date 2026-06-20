@@ -1445,8 +1445,12 @@
                     this.timeLeft = this.timePerRound;
                     
                     // Use the question index sent by server (same for all players)
-                    const questions = this.questionBank[difficulty || this.difficulty];
-                    this.currentQuestion = questions[questionIndex];
+                    const resolvedDifficulty = difficulty || this.difficulty;
+                    const questions = this.questionBank[resolvedDifficulty];
+                    const resolvedIndex = (questionIndex !== undefined && questionIndex !== null)
+                        ? questionIndex
+                        : Math.floor(Math.random() * questions.length);
+                    this.currentQuestion = questions[resolvedIndex];
                     
                     console.log('Question:', this.currentQuestion.start, '→', this.currentQuestion.target);
                     
@@ -1493,9 +1497,11 @@
 
                 // Proceed to next round
                 this.socket.on('proceedToNextRound', ({ round }) => {
+                    this.currentRound = round - 1; // nextRound() will increment it
                     setTimeout(() => {
                         document.getElementById('feedbackMessage').classList.add('hidden');
-                    }, 2000);
+                        this.nextRound();
+                    }, 1000);
                 });
 
                 // Game finished
