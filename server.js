@@ -272,9 +272,16 @@ io.on('connection', (socket) => {
                 });
             } else {
                 room.roundStartTime = Date.now();
+                // Pick a fresh random question index for the new round
+                const questionBank = { easy: 15, medium: 35, hard: 50 };
+                const questionCount = questionBank[room.difficulty] || 15;
+                const questionIndex = Math.floor(Math.random() * questionCount);
+                room.currentQuestionIndex = questionIndex;
                 io.to(roomCode).emit('startRound', {
                     round: room.currentRound,
-                    timestamp: room.roundStartTime
+                    timestamp: room.roundStartTime,
+                    questionIndex: questionIndex,
+                    difficulty: room.difficulty
                 });
             }
         } else {
