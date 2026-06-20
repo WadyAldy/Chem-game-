@@ -359,4 +359,3 @@ server.listen(PORT, () => {
     console.log(`ChemRace server running on port ${PORT}`);
     console.log(`Visit http://localhost:${PORT} to play`);
 });
-              
