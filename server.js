@@ -177,8 +177,8 @@ io.on('connection', (socket) => {
         const difficulties = ['easy', 'medium', 'hard'];
         const questionBank = {
             easy: 14,   // Number of questions in each difficulty
-            medium: 35,
-            hard: 50
+            medium: 26,
+            hard: 22
         };
         
         // Generate a random question index based on difficulty
@@ -272,7 +272,7 @@ io.on('connection', (socket) => {
                 });
             } else {
                 room.roundStartTime = Date.now();
-                const questionBank = { easy: 15, medium: 35, hard: 50 };
+                const questionBank = { easy: 14, medium: 26, hard: 22 };
                 const questionCount = questionBank[room.difficulty] || 15;
                 const questionIndex = Math.floor(Math.random() * questionCount);
                 room.currentQuestionIndex = questionIndex;
