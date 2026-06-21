@@ -176,7 +176,7 @@ io.on('connection', (socket) => {
         // Generate question on server side so all players get the same one
         const difficulties = ['easy', 'medium', 'hard'];
         const questionBank = {
-            easy: 14,   // Number of questions in each difficulty
+            easy: 15,   // Number of questions in each difficulty
             medium: 35,
             hard: 50
         };
@@ -272,7 +272,7 @@ io.on('connection', (socket) => {
                 });
             } else {
                 room.roundStartTime = Date.now();
-                const questionBank = { easy: 14, medium: 35, hard: 50 };
+                const questionBank = { easy: 15, medium: 35, hard: 50 };
                 const questionCount = questionBank[room.difficulty] || 15;
                 const questionIndex = Math.floor(Math.random() * questionCount);
                 room.currentQuestionIndex = questionIndex;
