@@ -78,6 +78,7 @@ io.on('connection', (socket) => {
             gameState: 'waiting', // waiting, playing, finished
             currentRound: 0,
             currentQuestion: null,
+            usedQuestions: [],
             roundStartTime: null
         };
 
@@ -174,16 +175,21 @@ io.on('connection', (socket) => {
         room.roundStartTime = Date.now();
         
         // Generate question on server side so all players get the same one
-        const difficulties = ['easy', 'medium', 'hard'];
         const questionBank = {
-            easy: 14,   // Number of questions in each difficulty
+            easy: 14,
             medium: 26,
             hard: 22
         };
         
-        // Generate a random question index based on difficulty
-        const questionCount = questionBank[room.difficulty] || 15;
-        const questionIndex = Math.floor(Math.random() * questionCount);
+        // Pick a random index that hasn't been used this game
+        const questionCount = questionBank[room.difficulty] || 14;
+        const available = [...Array(questionCount).keys()].filter(i => !room.usedQuestions.includes(i));
+        
+        // If all questions used, reset (shouldn't happen in a 5-round game but just in case)
+        if (available.length === 0) room.usedQuestions = [];
+        const pool = available.length > 0 ? available : [...Array(questionCount).keys()];
+        const questionIndex = pool[Math.floor(Math.random() * pool.length)];
+        room.usedQuestions.push(questionIndex);
         
         // Store the question index for this round
         room.currentQuestionIndex = questionIndex;
@@ -273,8 +279,12 @@ io.on('connection', (socket) => {
             } else {
                 room.roundStartTime = Date.now();
                 const questionBank = { easy: 14, medium: 26, hard: 22 };
-                const questionCount = questionBank[room.difficulty] || 15;
-                const questionIndex = Math.floor(Math.random() * questionCount);
+                const questionCount = questionBank[room.difficulty] || 14;
+                const available = [...Array(questionCount).keys()].filter(i => !room.usedQuestions.includes(i));
+                if (available.length === 0) room.usedQuestions = [];
+                const pool = available.length > 0 ? available : [...Array(questionCount).keys()];
+                const questionIndex = pool[Math.floor(Math.random() * pool.length)];
+                room.usedQuestions.push(questionIndex);
                 room.currentQuestionIndex = questionIndex;
                 io.to(roomCode).emit('startRound', {
                     round: room.currentRound,
@@ -359,3 +369,4 @@ server.listen(PORT, () => {
     console.log(`ChemRace server running on port ${PORT}`);
     console.log(`Visit http://localhost:${PORT} to play`);
 });
+            
