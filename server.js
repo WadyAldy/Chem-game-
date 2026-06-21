@@ -176,7 +176,7 @@ io.on('connection', (socket) => {
         // Generate question on server side so all players get the same one
         const difficulties = ['easy', 'medium', 'hard'];
         const questionBank = {
-            easy: 15,   // Number of questions in each difficulty
+            easy: 14,   // Number of questions in each difficulty
             medium: 35,
             hard: 50
         };
